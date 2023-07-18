@@ -15,7 +15,17 @@ resource "azuread_group" "group" {
   mail_enabled      = try(var.azuread_groups.mail_enabled, null)
   writeback_enabled = try(var.azuread_groups.writeback_enabled, null)
 
+  types = try(var.azuread_groups.types, null) # Either `DynamicMembership` or `Unified`. Cannot be set alongside the `members` property
+  dynamic "dynamic_membership_rule" {
+    for_each = can(var.azuread_groups.dynamic_membership_rule) ? [var.azuread_groups.dynamic_membership_rule] : []
+
+    content {
+      enabled = true
+      rule    = dynamic_membership_rule.value
+    }
+  }
 }
+
 data "azuread_user" "main" {
   for_each            = try(toset(var.azuread_groups.owners.user_principal_names), {})
   user_principal_name = each.value
