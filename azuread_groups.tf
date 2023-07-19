@@ -14,6 +14,8 @@ module "azuread_groups" {
   remote_objects = {
     azuread_administrative_units = local.combined_objects_azuread_administrative_units
   }
+
+  depends_on = [module.azuread_users]
 }
 
 output "azuread_groups" {
