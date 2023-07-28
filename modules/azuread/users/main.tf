@@ -7,5 +7,5 @@ terraform {
 }
 
 data "azuread_domains" "aad_domains" {
-  only_initial = true
+  only_default = true
 }
