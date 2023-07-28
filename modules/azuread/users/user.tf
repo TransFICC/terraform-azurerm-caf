@@ -57,13 +57,13 @@ resource "random_password" "pwd" {
 
 
 resource "azurerm_key_vault_secret" "aad_user_name" {
-  name         = format("%s%s-name", local.secret_prefix, local.user_name)
+  name         = format("%s%s-name", local.secret_prefix, replace(local.user_name, "_", "-"))
   value        = azuread_user.account.user_principal_name
   key_vault_id = local.keyvault_id
 }
 
 resource "azurerm_key_vault_secret" "aad_user_password" {
-  name            = format("%s%s-password", local.secret_prefix, local.user_name)
+  name            = format("%s%s-password", local.secret_prefix, replace(local.user_name, "_", "-"))
   value           = random_password.pwd.result
   expiration_date = timeadd(time_rotating.pwd.id, format("%sh", local.password_policy.expire_in_days * 24))
   key_vault_id    = local.keyvault_id
