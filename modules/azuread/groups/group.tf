@@ -16,12 +16,12 @@ resource "azuread_group" "group" {
   writeback_enabled = try(var.azuread_groups.writeback_enabled, null)
 
   types = try(var.azuread_groups.types, null) # Either `DynamicMembership` or `Unified`. Cannot be set alongside the `members` property
-  dynamic "dynamic_membership_rule" {
-    for_each = can(var.azuread_groups.dynamic_membership_rule) ? [var.azuread_groups.dynamic_membership_rule] : []
+  dynamic "dynamic_membership" {
+    for_each = can(var.azuread_groups.dynamic_membership) ? [var.azuread_groups.dynamic_membership] : []
 
     content {
       enabled = true
-      rule    = dynamic_membership_rule.value
+      rule    = dynamic_membership.value
     }
   }
 }
